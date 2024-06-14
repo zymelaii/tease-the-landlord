@@ -1,46 +1,50 @@
 #pragma once
 
-#include <vector>
-#include <optional>
 #include "game.h"
-#include "cardgroup.h"
 
-class Player {
-    friend class App;
-
-protected:
-    Player(int uid)
-        : game_(nullptr)
-        , uid_(uid) {}
-
+//玩家类
+class Player{
+	friend class Game;
+	friend class Scene;
 public:
-    Player() = delete;
+	Player(Game &game);
 
-    //! TODO: 由 app 实现 uid 分配
-    //! WARNING: player 应该由 app 构造
-    int uid() const {
-        return uid_;
-    }
+	virtual bool IsHuman() const;//是否为人类玩家
+	void NewGame(void);//开始新的一局，做一些初始化集合等的操作
+	void ClearAnalyse(void);//清空分析牌集合
+	virtual int GetBaseScore(int questioned,int nowscore);
+	void AddCard(int num){ cards.insert(num); }//抹牌
+	int GetRemain(void){ return cards.size(); }//剩余牌数
+	bool IsValid(void);//判断选择牌是否合格
+	void AnalyseSelection(void);//分析选择牌类型及总权值
+	// void DivideIntoGroups(void); //分析并拆分牌型
+	// void ThreeplusAndAirplane(void);//从分析后的基本牌型中组合三带一和飞机
+	// void DeleteUnkown(void);//删除牌型集合中未知类型
+	// void SelectCards(bool hint=false);//AI选牌
+	// void Myself();//直接出牌
+	// void Friend();//跟友方牌
+	// void Enemy(bool hint);//跟敌方牌
+	// void NeedSigle();//拆出单张
+	// void NeedDouble();
+	// void NeedSigleSeq();
+	// void NeedThreePlus();
+	// void NeedAirplane();
+	virtual bool Discard(void); //AI出牌
+	// bool HumanDiscard();//玩家出牌
+	bool DiscardAndClear();//出牌并重置相应结构
+	// void Hint(void); //提示牌
+	void Pass(void);//过牌，重置相应结构
+	//给定权值，从集合中查找相应0-53数字，然后从集合中删除并返回该数字；不存在或无效返回-1
+	int ValueToNum(std::set<int> &cardscopy, int value);
+	void FreshenMap(std::map<int, int> &m);//删除分析堆中数量为零的元素
+	static bool MyCompare(CardGroup *c1, CardGroup *c2);//对分析后牌集合排序的回调函数
 
-    bool join(Game *game) {
-        game_ = game;
-        return game->add_player(this);
-    }
-
-    void accept(Card card) {
-        hand_cards_.push_back(card);
-    }
-
-    bool is_card_all_out() const {
-        return hand_cards_.empty();
-    }
-
-    //! FIXME: 无法验证出牌是否合法
-    virtual std::optional<CardGroup> make_decision() = 0;
-    void                             notify_decision_accpted(CardGroup &cards);
-
-private:
-    const Game       *game_;
-    std::vector<Card> hand_cards_;
-    const int         uid_;
+	Game &game;//游戏对象
+	bool test;//是否试过送下家走
+	bool nodiscard;//不出标志
+	int score;//玩家当前分数
+	std::set<int> cards;//手牌
+	std::vector<CardGroup*> analyse;//分析后拆分的牌型集合
+	CardGroup selection;//选择牌的集合
+	CardGroup discard;//打出的牌的集合
 };

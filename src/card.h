@@ -1,40 +1,14 @@
 #pragma once
 
-struct Card {
-    enum Suit {
-        HEARTS,
-        DIAMONDS,
-        CLUBS,
-        SPADES,
-        JOKER,
-    };
+//发牌堆类
+class Cards{
+public:
+	Cards();
+	void RandCards(void);//洗牌
+	int GetCard();//抹牌
+	int GetRemain(void){ return remain; };
 
-    enum Rank {
-        BIG_JOKER,
-        SMALL_JOKER,
-        KING,
-        QUEEN,
-        JACK,
-        TEN,
-        NINE,
-        EIGHT,
-        SEVEN,
-        SIX,
-        FIVE,
-        FOUR,
-        THREE,
-        TWO,
-        ACE
-    };
-
-    const Suit suit;
-    const Rank rank;
-
-    bool operator<(const Card& other) const {
-        return rank < other.rank;
-    }
-
-    bool operator==(const Card& other) const {
-        return rank == other.rank;
-    }
+private:
+	int cards[54];//牌数组
+	int remain;//剩余牌数
 };

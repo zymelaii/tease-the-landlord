@@ -1,88 +1,52 @@
 #pragma once
 
-#include <memory>
-#include <array>
-#include <vector>
-#include <algorithm>
-#include <assert.h>
-#include "cardgroup.h"
+#include <set>
+#include "card.h"
 
-class Player;
-class Deck;
-class Arbiter;
-
-enum PlayAction {
-    Play,
-    Skip,
+//游戏进度状态
+enum Status{
+	NOTSTART,//游戏未开始
+	GETLANDLORD,//叫地主阶段
+	SENDLANDLORDCARD,//发地主牌阶段
+	DISCARD,//出牌阶段
+	GAMEOVER//游戏结束
 };
-
-class Game {
+//游戏主结构
+class Game{
+	friend class Player;
+	friend class Scene;
 public:
-    //! NOTE: 记录具体牌组对于机器玩家的优势过于巨大
-    //! TODO: 用牌面分值代替记录牌组会缺失实际的出牌，玩家将无法通
-    //! 过遍历牌组反推对手的出牌，关于是否使用实际出牌待定
-    struct CardPlayRecordRef {
-        const Player& player;
-        int           card_score;
-        //! FIXME: 临时修一下
-        CardGroup card_group;
-    };
+	Game();
+	~Game();
 
-public:
-    Game(Deck* deck, Arbiter* arbiter);
+	Status GetStatus(void);//获取当前游戏进度状态
+	void GameStart(void);//开始新游戏
+	void InitGame(void);//初始化相关结构
+	void LoadPlayerScore();
+	void StorePlayerScore();
+	inline void SendCard(void);//发牌
+	void GetLandlord(void);//叫地主
+	void SendScore(int result);//设置玩家叫地主分数
+	void SendLandlordCard(void);//发地主牌
+	Player *ProPlayer(void);//当前玩家的上家
+	Player *NextPlayer(void);//当前玩家下家
+	int NextPlayerNum(void);//当前玩家的下家在玩家指针数组中的下标
+	bool IsHumanTurn(void);//当前玩家为player[0]
+	void Discard(void);//出牌
+	void Hint(void);//提示
+	void Pass(void);//过牌
+	void GameOver(void);//游戏结束
 
-    int  total_players() const;
-    bool add_player(Player* player);
-
-    bool is_playing() const {
-        return on_play_;
-    }
-
-    void start();
-
-    int total_turns() const {
-        return turn_stack_.size();
-    }
-
-    const CardPlayRecordRef& last_play_record() const {
-        assert(total_turns() > 0);
-        return turn_stack_.back();
-    }
-
-    std::vector<CardPlayRecordRef>& play_records() {
-        return turn_stack_;
-    }
-
-    void accept(Player* player, CardGroup card_group) {
-        assert(std::count(players_.begin(), players_.end(), player) == 1);
-        turn_stack_.push_back(
-            {*player, CardGroup::score(card_group), card_group});
-        next_turn();
-    }
-
-    void skip() {
-        next_turn();
-    }
-
-    bool try_handle_current_turn();
-
-    void finish();
-
-    //! NOTE: -1 为非法 uid
-    int last_winner() const {
-        return last_winner_;
-    }
-
-protected:
-    void next_turn();
-
-private:
-    std::unique_ptr<Deck>                  deck_;
-    std::unique_ptr<Arbiter>               arbiter_;
-    std::array<std::unique_ptr<Player>, 4> players_;
-    std::vector<CardPlayRecordRef>         turn_stack_;
-    bool                                   on_play_;
-    int                                    player_index_;
-    int                                    current_total_players_;
-    int                                    last_winner_;
+	Status status;//游戏进度
+	Cards cardheap;//发牌堆
+	Player *player[3];//真人玩家编号为0
+	Player *landlord;//地主
+	Player *curplayer;//当前出牌玩家
+	Player *lastone;//最后出牌方
+	int callscore[3];//各家叫地主的分数
+	int callbegin;//第一个叫地主的玩家
+	int basescore;//本局基本分
+	int times;//本局倍率
+	int questioned;//已询问数量
+	int landlordcard[3];//本局地主的专属牌存储区
 };
