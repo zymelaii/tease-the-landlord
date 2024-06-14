@@ -1,0 +1,25 @@
+{
+    "version": 3,
+    "configurePresets": [
+      {
+        "name": "ninja-base",
+        "hidden": true,
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "installDir": "${sourceDir}/install/${presetName}",
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release"
+        }
+      },
+      {
+        "name": "windows",
+        "displayName": "Windows x64 Release",
+        "inherits": "ninja-base"
+      },
+      {
+        "name": "linux",
+        "displayName": "Linux x64 Release",
+        "inherits": "ninja-base"
+      }
+    ]
+  }
