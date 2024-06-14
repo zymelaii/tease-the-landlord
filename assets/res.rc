@@ -49,7 +49,7 @@ END
 //
 
 DISCARD                 BITMAP                  "discard.bmp"
-CARDS                   BITMAP                  "cards.bmp"
+CARDS                   BITMAP                  "cards-parody.bmp"
 HINT                    BITMAP                  "hint.bmp"
 NO                      BITMAP                  "no.bmp"
 NODISCARD               BITMAP                  "nodiscard.bmp"
