@@ -18,7 +18,8 @@ list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/assets/res.rc)
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 ${SOURCE_FILES})
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC UNICODE _UNICODE)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Msimg32.lib)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE msimg32.lib)
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE -static)
 
 install(
     TARGETS ${CMAKE_PROJECT_NAME}

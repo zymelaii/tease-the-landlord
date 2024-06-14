@@ -345,3 +345,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,cmake,makefile,windows,linux,python,java,rust
+
+# Output files of the executable
+**/data
