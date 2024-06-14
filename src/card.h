@@ -27,8 +27,8 @@ struct Card {
         ACE
     };
 
-    const Suit suit;
-    const Rank rank;
+    Suit suit;
+    Rank rank;
 
     bool operator<(const Card& other) const {
         return rank < other.rank;

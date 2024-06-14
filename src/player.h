@@ -14,7 +14,8 @@ protected:
         , uid_(uid) {}
 
 public:
-    Player() = delete;
+    Player()          = delete;
+    virtual ~Player() = default;
 
     //! TODO: 由 app 实现 uid 分配
     //! WARNING: player 应该由 app 构造

@@ -6,6 +6,8 @@
 
 class Deck {
 public:
+    virtual ~Deck() = default;
+
     /*!
      * \brief 初始化牌堆
      *

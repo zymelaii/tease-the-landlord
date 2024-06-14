@@ -1,0 +1,16 @@
+{
+    "clangd.path": "clangd",
+    "clangd.onConfigChanged": "restart",
+    "clangd.restartAfterCrash": true,
+    "clangd.arguments": [
+        "--enable-config",
+        "--compile-commands-dir=build/windows",
+        "--clang-tidy",
+        "--all-scopes-completion",
+        "--completion-style=detailed",
+        "--header-insertion=never",
+        "--background-index",
+        "--pch-storage=disk",
+        "-j=8",
+    ],
+}

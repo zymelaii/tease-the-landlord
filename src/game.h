@@ -3,7 +3,6 @@
 #include <memory>
 #include <array>
 #include <vector>
-#include <algorithm>
 #include <assert.h>
 #include "cardgroup.h"
 
@@ -30,6 +29,7 @@ public:
 
 public:
     Game(Deck* deck, Arbiter* arbiter);
+    virtual ~Game() = default;
 
     int  total_players() const;
     bool add_player(Player* player);
